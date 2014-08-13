@@ -150,7 +150,7 @@ define tomcat::instance(
     false   => $tomcat::version,
     default => $tomcat_version,
   }
-  validate_re($version, '^[5-7]([\.0-9]+)?$')
+  validate_re($version, '^[5-8]([\.0-9]+)?$')
 
   $tomcat_name = $name
   $basedir = "${_basedir}/${name}"
@@ -258,6 +258,7 @@ define tomcat::instance(
     5 => 'server.xml.tomcat55.erb',
     6 => 'server.xml.tomcat6.erb',
     7 => 'server.xml.tomcat7.erb',
+    8 => 'server.xml.tomcat7.erb',
   }
 
   if $tomcat::type == 'package' {

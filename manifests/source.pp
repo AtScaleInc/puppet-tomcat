@@ -26,6 +26,7 @@ class tomcat::source {
 
   $version     = $tomcat::src_version
   $sources_src = $tomcat::sources_src
+  $url         = $::tomcat::url
 
   if $version =~ /^6\./ {
     # install extra tomcat juli adapters, used to configure logging.
@@ -38,14 +39,22 @@ class tomcat::source {
   $a_version = split($version, '[.]')
   $maj_version = $a_version[0]
 
-  $baseurl = "${sources_src}/tomcat-${maj_version}/v${version}/bin"
-  $tomcaturl = "${baseurl}/apache-tomcat-${version}.tar.gz"
+  if empty($url) {
+    $baseurl = "${sources_src}/tomcat-${maj_version}/v${version}/bin"
+    $tomcaturl = "${baseurl}/apache-tomcat-${version}.tar.gz"
 
-  archive{ "apache-tomcat-${version}":
-    url         => $tomcaturl,
-    digest_url  => "${tomcaturl}.md5",
-    digest_type => 'md5',
-    target      => '/opt',
+    archive{ "apache-tomcat-${version}":
+      url         => $tomcaturl,
+      digest_url  => "${tomcaturl}.md5",
+      digest_type => 'md5',
+      target      => '/opt',
+    }
+  } else {
+    archive{ "apache-tomcat-${version}":
+      url         => $url,
+      target      => '/opt',
+      checksum    => false,
+    }
   }
 
   file { '/opt/apache-tomcat':

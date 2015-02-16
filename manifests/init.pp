@@ -2,6 +2,7 @@ class tomcat (
   $version          = $tomcat::params::version,
   $sources          = false,
   $sources_src      = $tomcat::params::sources_src,
+  $url              = undef,
   $instance_basedir = $tomcat::params::instance_basedir,
   $tomcat_uid       = undef,
   $tomcat_gid       = undef,

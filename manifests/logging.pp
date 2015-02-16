@@ -14,20 +14,6 @@ class tomcat::logging {
     default => "${::tomcat::home}/lib",
   }
 
-  $log4j_packages = $::osfamily? {
-    Debian => ['liblog4j1.2-java', 'libcommons-logging-java'],
-    RedHat => ['log4j', 'jakarta-commons-logging'],
-  }
-
-  package {$log4j_packages:
-    ensure => present,
-  }
-
-  $log4j = $::osfamily? {
-    Debian => '/usr/share/java/log4j-1.2.jar',
-    RedHat => '/usr/share/java/log4j.jar',
-  }
-
   # The source class need (and define) this directory before logging
   if $::tomcat::sources == false {
     file {$base_path:
@@ -42,23 +28,17 @@ class tomcat::logging {
   }
 
   file {'commons-logging.jar':
-    ensure  => link,
     path    => "${base_path}/commons-logging.jar",
-    target  => '/usr/share/java/commons-logging.jar',
-    require => Package[$log4j_packages],
+    source    => "puppet:///modules/${module_name}/commons-logging.jar",
   }
 
   file {'log4j.jar':
-    ensure  => link,
     path    => "${base_path}/log4j.jar",
-    target  => $log4j,
-    require => Package[$log4j_packages],
+    source    => "puppet:///modules/${module_name}/log4j.jar",
   }
 
   file {'log4j.properties':
     path    => "${base_path}/log4j.properties",
     source  => $conffile,
-    require => Package[$log4j_packages],
   }
-
 }
